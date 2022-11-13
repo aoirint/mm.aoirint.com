@@ -1,9 +1,9 @@
-version: "2.4"
+version: "3.8"
 
 services:
   postgres:
-    image: postgres:${POSTGRES_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: postgres:13
+    restart: always
     security_opt:
       - no-new-privileges:true
     pids_limit: 100
@@ -14,51 +14,37 @@ services:
     volumes:
       - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
     environment:
-      # timezone inside container
-      - TZ
-
-      # necessary Postgres options/variables
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
+      TZ: Asia/Tokyo
+      POSTGRES_USER: mmuser
+      POSTGRES_PASSWORD: mmuser_password
+      POSTGRES_DB: mattermost
 
   mattermost:
     depends_on:
       - postgres
-    image: mattermost/${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
+    image: mattermost/mattermost-team-edition:release-7.3
+    restart: always
     security_opt:
       - no-new-privileges:true
     pids_limit: 200
-    read_only: ${MATTERMOST_CONTAINER_READONLY}
+    read_only: false
     tmpfs:
       - /tmp
     ports:
       - ${APP_PORT}:8065
     volumes:
-      - ${MATTERMOST_CONFIG_PATH}:/mattermost/config:rw
-      - ${MATTERMOST_DATA_PATH}:/mattermost/data:rw
-      - ${MATTERMOST_LOGS_PATH}:/mattermost/logs:rw
-      - ${MATTERMOST_PLUGINS_PATH}:/mattermost/plugins:rw
-      - ${MATTERMOST_CLIENT_PLUGINS_PATH}:/mattermost/client/plugins:rw
-      - ${MATTERMOST_BLEVE_INDEXES_PATH}:/mattermost/bleve-indexes:rw
-      # When you want to use SSO with GitLab, you have to add the cert pki chain of GitLab inside Alpine
-      # to avoid Token request failed: certificate signed by unknown authority 
-      # (link: https://github.com/mattermost/mattermost-server/issues/13059 and https://github.com/mattermost/docker/issues/34)
-      # - ${GITLAB_PKI_CHAIN_PATH}:/etc/ssl/certs/pki_chain.pem:ro
+      - ${MATTERMOST_DATA_PATH}/config:/mattermost/config:rw
+      - ${MATTERMOST_DATA_PATH}/data:/mattermost/data:rw
+      - ${MATTERMOST_DATA_PATH}/logs:/mattermost/logs:rw
+      - ${MATTERMOST_DATA_PATH}/plugins:/mattermost/plugins:rw
+      - ${MATTERMOST_DATA_PATH}/client/plugins:/mattermost/client/plugins:rw
+      - ${MATTERMOST_DATA_PATH}/bleve-indexes:/mattermost/bleve-indexes:rw
     environment:
-      # timezone inside container
-      - TZ
-
-      # necessary Mattermost options/variables (see env.example)
-      - MM_SQLSETTINGS_DRIVERNAME
-      - MM_SQLSETTINGS_DATASOURCE
-
-      # necessary for bleve
-      - MM_BLEVESETTINGS_INDEXDIR
-
-      # additional settings
-      - MM_SERVICESETTINGS_SITEURL
+      TZ: Asia/Tokyo
+      MM_SQLSETTINGS_DRIVERNAME: postgres
+      MM_SQLSETTINGS_DATASOURCE: postgres://mmuser:mmuser_password@postgres:5432/mattermost?sslmode=disable&connect_timeout=10
+      MM_BLEVESETTINGS_INDEXDIR: /mattermost/bleve-indexes
+      MM_SERVICESETTINGS_SITEURL: ${MM_SERVICESETTINGS_SITEURL:?}
 
 # If you use rolling image tags and feel lucky watchtower can automatically pull new images and
 # instantiate containers from it. https://containrrr.dev/watchtower/
