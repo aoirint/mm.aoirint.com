@@ -2,7 +2,7 @@ version: "2.4"
 
 services:
   postgres:
-    image: postgres:${POSTGRES_IMAGE_TAG}
+    image: postgres:13-alpine
     restart: always
     security_opt:
       - no-new-privileges:true
