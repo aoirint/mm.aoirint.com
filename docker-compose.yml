@@ -25,7 +25,7 @@ services:
   mattermost:
     depends_on:
       - postgres
-    image: mattermost/${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}
+    image: mattermost/mattermost-team-edition:release-7.3
     restart: ${RESTART_POLICY}
     security_opt:
       - no-new-privileges:true
