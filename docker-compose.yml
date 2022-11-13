@@ -1,4 +1,4 @@
-version: "2.4"
+version: "3.8"
 
 services:
   postgres:
@@ -14,11 +14,10 @@ services:
     volumes:
       - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
     environment:
-      - TZ=Asia/Tokyo
-
-      - POSTGRES_USER=mmuser
-      - POSTGRES_PASSWORD=mmuser_password
-      - POSTGRES_DB=mattermost
+      TZ: Asia/Tokyo
+      POSTGRES_USER: mmuser
+      POSTGRES_PASSWORD: mmuser_password
+      POSTGRES_DB: mattermost
 
   mattermost:
     depends_on:
@@ -41,14 +40,11 @@ services:
       - ${MATTERMOST_DATA_PATH}/client/plugins:/mattermost/client/plugins:rw
       - ${MATTERMOST_DATA_PATH}/bleve-indexes:/mattermost/bleve-indexes:rw
     environment:
-      - TZ=Asia/Tokyo
-
-      - MM_SQLSETTINGS_DRIVERNAME=postgres
-      - MM_SQLSETTINGS_DATASOURCE=postgres://mmuser:mmuser_password@postgres:5432/mattermost?sslmode=disable&connect_timeout=10
-
-      - MM_BLEVESETTINGS_INDEXDIR=/mattermost/bleve-indexes
-
-      - MM_SERVICESETTINGS_SITEURL
+      TZ: Asia/Tokyo
+      MM_SQLSETTINGS_DRIVERNAME: postgres
+      MM_SQLSETTINGS_DATASOURCE: postgres://mmuser:mmuser_password@postgres:5432/mattermost?sslmode=disable&connect_timeout=10
+      MM_BLEVESETTINGS_INDEXDIR: /mattermost/bleve-indexes
+      MM_SERVICESETTINGS_SITEURL: ${MM_SERVICESETTINGS_SITEURL:?}
 
 # If you use rolling image tags and feel lucky watchtower can automatically pull new images and
 # instantiate containers from it. https://containrrr.dev/watchtower/
