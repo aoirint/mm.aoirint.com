@@ -34,12 +34,12 @@ services:
     ports:
       - ${APP_PORT}:8065
     volumes:
-      - ${MATTERMOST_CONFIG_PATH}:/mattermost/config:rw
-      - ${MATTERMOST_DATA_PATH}:/mattermost/data:rw
-      - ${MATTERMOST_LOGS_PATH}:/mattermost/logs:rw
-      - ${MATTERMOST_PLUGINS_PATH}:/mattermost/plugins:rw
-      - ${MATTERMOST_CLIENT_PLUGINS_PATH}:/mattermost/client/plugins:rw
-      - ${MATTERMOST_BLEVE_INDEXES_PATH}:/mattermost/bleve-indexes:rw
+      - ${MATTERMOST_DATA_PATH}/config:/mattermost/config:rw
+      - ${MATTERMOST_DATA_PATH}/data:/mattermost/data:rw
+      - ${MATTERMOST_DATA_PATH}/logs:/mattermost/logs:rw
+      - ${MATTERMOST_DATA_PATH}/plugins:/mattermost/plugins:rw
+      - ${MATTERMOST_DATA_PATH}/client/plugins:/mattermost/client/plugins:rw
+      - ${MATTERMOST_DATA_PATH}/bleve-indexes:/mattermost/bleve-indexes:rw
     environment:
       - TZ=Asia/Tokyo
 
