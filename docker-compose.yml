@@ -21,8 +21,6 @@ services:
       POSTGRES_DB: mattermost
 
   mattermost:
-    depends_on:
-      - postgres
     image: mattermost/mattermost-team-edition:release-7.4
     restart: always
     security_opt:
@@ -33,6 +31,8 @@ services:
       - /tmp
     ports:
       - ${APP_PORT}:8065
+    depends_on:
+      - postgres
     volumes:
       - ${MATTERMOST_DATA_PATH}/config:/mattermost/config:rw
       - ${MATTERMOST_DATA_PATH}/data:/mattermost/data:rw
