@@ -15,7 +15,7 @@ services:
       - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
     environment:
       # timezone inside container
-      - TZ
+      - TZ=Asia/Tokyo
 
       # necessary Postgres options/variables
       - POSTGRES_USER
@@ -48,7 +48,7 @@ services:
       # - ${GITLAB_PKI_CHAIN_PATH}:/etc/ssl/certs/pki_chain.pem:ro
     environment:
       # timezone inside container
-      - TZ
+      - TZ=Asia/Tokyo
 
       # necessary Mattermost options/variables (see env.example)
       - MM_SQLSETTINGS_DRIVERNAME
