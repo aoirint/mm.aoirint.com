@@ -14,13 +14,11 @@ services:
     volumes:
       - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
     environment:
-      # timezone inside container
       - TZ=Asia/Tokyo
 
-      # necessary Postgres options/variables
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
+      - POSTGRES_USER=mmuser
+      - POSTGRES_PASSWORD=mmuser_password
+      - POSTGRES_DB=mattermost
 
   mattermost:
     depends_on:
@@ -47,12 +45,10 @@ services:
       # (link: https://github.com/mattermost/mattermost-server/issues/13059 and https://github.com/mattermost/docker/issues/34)
       # - ${GITLAB_PKI_CHAIN_PATH}:/etc/ssl/certs/pki_chain.pem:ro
     environment:
-      # timezone inside container
       - TZ=Asia/Tokyo
 
-      # necessary Mattermost options/variables (see env.example)
-      - MM_SQLSETTINGS_DRIVERNAME
-      - MM_SQLSETTINGS_DATASOURCE
+      - MM_SQLSETTINGS_DRIVERNAME=postgres
+      - MM_SQLSETTINGS_DATASOURCE=postgres://mmuser:mmuser_password@postgres:5432/mattermost?sslmode=disable&connect_timeout=10
 
       # necessary for bleve
       - MM_BLEVESETTINGS_INDEXDIR
