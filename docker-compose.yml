@@ -1,6 +1,4 @@
 # based on https://github.com/mattermost/docker/blob/1f2adc1aebc75ed2ceb12a05c5d05c1e0298966a/docker-compose.yml (Apache License 2.0 by Mattermost)
-version: "3.8"
-
 services:
   postgres:
     image: postgres:13
